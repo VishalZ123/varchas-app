@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:varchas_app/Utils/constants.dart';
-import 'package:varchas_app/screens/leaderboard_screen.dart';
 import '../widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-var base_url = "172.31.50.153:8000"; // varchas22.in
+var base_url = "varchas22.in"; //"172.31.50.153:8000";
 
 class ChooseSportScreen extends StatefulWidget {
   const ChooseSportScreen({Key? key}) : super(key: key);
@@ -34,29 +37,34 @@ class _ChooseSportScreenState extends State<ChooseSportScreen> {
             SizedBox(
               height: data.height * 0.01,
             ),
-            Card(
-              color: Colors.black,
-              margin: EdgeInsets.all(6),
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    //image,
-                    SvgPicture.asset(
-                      "assets/overall.svg",
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      width: MediaQuery.of(context).size.width * 0.8,
-                    ),
-                    const Text(
-                      "OVERALL",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 17,
+            GestureDetector(
+              onTap: () {
+                openSheet('Overall');
+              },
+              child: Card(
+                color: Colors.black,
+                margin: EdgeInsets.all(6),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      //image,
+                      SvgPicture.asset(
+                        "assets/overall.svg",
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        width: MediaQuery.of(context).size.width * 0.8,
                       ),
-                    ),
-                  ],
+                      const Text(
+                        "OVERALL",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -90,13 +98,7 @@ class _ChooseSportScreenState extends State<ChooseSportScreen> {
   Widget displaySportIcon(String sportName) {
     return GestureDetector(
       onTap: () {
-        int sportNumber = sportsList.indexOf(sportName) + 1;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => LeaderBoardScreen(sportNumber.toString()),
-          ),
-        );
+        openSheet(sportName);
       },
       child: Card(
         color: Colors.black,
@@ -134,5 +136,16 @@ class _ChooseSportScreenState extends State<ChooseSportScreen> {
         ),
       ),
     );
+  }
+}
+
+openSheet(sportName) async {
+  var response = await http.get(Uri.parse("http://$base_url/app_apis/score/"),
+      headers: {"name": sportName});
+  String link = json.decode(response.body)['link'];
+
+  Uri _url = Uri.parse(link);
+  if (!await launchUrl(_url)) {
+    throw 'Could not launch $_url';
   }
 }

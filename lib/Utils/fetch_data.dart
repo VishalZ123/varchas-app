@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:varchas_app/Utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-var base_url = "172.31.50.153:8000"; // varchas22.in
+var base_url = "varchas22.in"; //"172.31.50.153:8000";
+
 Future<TeamData> fetchTeamData() async {
   // final response = await http
   //     .get(Uri.parse('http://$base_url/registration/teamsApi/?format=json'));
@@ -153,10 +154,6 @@ getInformalEvents(int day) async {
       }
     }
   });
-  print("informal");
-  for(int i=0;i<events.length;i++){
-    print(events[i]);
-  }
   return events;
 }
 

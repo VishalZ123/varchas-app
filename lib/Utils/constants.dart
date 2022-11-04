@@ -27,7 +27,7 @@ final locations = {
   'VIRU Cricket Academy': [],
   'L S Sankhla Sports Academy': [26.31901835293305, 73.0823644165303],
 };
-final dates = ["2022-10-29", "2022-10-30", "2022-10-31"];
+final dates = ["2022-11-04", "2022-11-05", "2022-11-06"];
 final sportsList = [
   'Athletics',
   'Badminton',
